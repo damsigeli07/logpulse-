@@ -2,6 +2,11 @@
 name = "logpulse"
 version = "0.1.0"
 edition = "2024"
+description = "High-performance server log analytics CLI"
+repository = "https://github.com/damsigeli07/LogPulse"
+readme = "README"
+keywords = ["log", "analytics", "cli"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 anyhow = "1.0.104"
