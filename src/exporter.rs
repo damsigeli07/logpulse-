@@ -90,3 +90,45 @@ pub fn export_csv(report: &AnalysisReport, output_path: &Path) -> Result<()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn sample_report() -> AnalysisReport {
+        AnalysisReport {
+            total_requests: 3,
+            invalid_log_count: 2,
+            successful_requests: 1,
+            client_errors: 1,
+            server_errors: 1,
+            error_rate_percent: 66.67,
+            average_latency_ms: 200.0,
+            p95_latency_ms: 300,
+            p99_latency_ms: 300,
+            top_endpoints: vec![("/users".to_string(), 3)],
+        }
+    }
+
+    #[test]
+    fn json_export_includes_invalid_log_count() {
+        let path = std::env::temp_dir().join(format!("logpulse-{}.json", std::process::id()));
+
+        export_json(&sample_report(), &path).unwrap();
+        let output = std::fs::read_to_string(&path).unwrap();
+        std::fs::remove_file(path).unwrap();
+
+        assert!(output.contains(r#""invalid_log_count": 2"#));
+    }
+
+    #[test]
+    fn csv_export_includes_invalid_log_count() {
+        let path = std::env::temp_dir().join(format!("logpulse-{}.csv", std::process::id()));
+
+        export_csv(&sample_report(), &path).unwrap();
+        let output = std::fs::read_to_string(&path).unwrap();
+        std::fs::remove_file(path).unwrap();
+
+        assert!(output.contains("summary,invalid_log_count,2"));
+    }
+}
