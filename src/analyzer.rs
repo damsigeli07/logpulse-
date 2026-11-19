@@ -92,3 +92,52 @@ fn percentile(sorted_values: &[u64], percentile: usize) -> u64 {
     sorted_values[rank.saturating_sub(1)]
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::models::LogEntry;
+
+    fn sample_entry(endpoint: &str, status: u16, latency: u64) -> LogEntry {
+        LogEntry {
+            ip: "127.0.0.1".to_string(),
+            timestamp: "18/Nov/2026:08:10:00".to_string(),
+            method: "GET".to_string(),
+            endpoint: endpoint.to_string(),
+            status_code: status,
+            response_size_bytes: 100,
+            response_time_ms: latency,
+        }
+    }
+
+    #[test]
+    fn test_request_statistics() {
+        let entries = vec![
+            sample_entry("/users", 200, 100),
+            sample_entry("/users", 404, 200),
+            sample_entry("/products", 500, 300),
+        ];
+
+        let report = analyze_logs(&entries);
+
+        assert_eq!(report.total_requests, 3);
+        assert_eq!(report.successful_requests, 1);
+        assert_eq!(report.client_errors, 1);
+        assert_eq!(report.server_errors, 1);
+        assert!((report.error_rate_percent - 66.6666667).abs() < 0.001);
+        assert!((report.average_latency_ms - 200.0).abs() < 0.001);
+    }
+
+    #[test]
+    fn test_empty_logs() {
+        let entries: Vec<LogEntry> = vec![];
+
+        let report = analyze_logs(&entries);
+
+        assert_eq!(report.total_requests, 0);
+        assert_eq!(report.error_rate_percent, 0.0);
+        assert_eq!(report.average_latency_ms, 0.0);
+        assert_eq!(report.p95_latency_ms, 0);
+        assert_eq!(report.p99_latency_ms, 0);
+    }
+}
+

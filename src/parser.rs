@@ -64,3 +64,41 @@ pub fn parse_line(line: &str) -> Result<LogEntry> {
     })
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_valid_log() {
+        let line =
+            r#"192.168.1.10 - - [18/Nov/2026:08:10:00] "GET /api/users HTTP/1.1" 200 1234 145"#;
+
+        let entry = parse_line(line).unwrap();
+
+        assert_eq!(entry.ip, "192.168.1.10");
+        assert_eq!(entry.method, "GET");
+        assert_eq!(entry.endpoint, "/api/users");
+        assert_eq!(entry.status_code, 200);
+        assert_eq!(entry.response_size_bytes, 1234);
+        assert_eq!(entry.response_time_ms, 145);
+    }
+
+    #[test]
+    fn test_parse_invalid_log() {
+        let line = "This is not a valid server log";
+
+        assert!(parse_line(line).is_err());
+    }
+
+    #[test]
+    fn test_parse_post_request() {
+        let line =
+            r#"192.168.1.12 - - [18/Nov/2026:08:10:04] "POST /api/login HTTP/1.1" 201 456 210"#;
+
+        let entry = parse_line(line).unwrap();
+
+        assert_eq!(entry.method, "POST");
+        assert_eq!(entry.status_code, 201);
+    }
+}
+
