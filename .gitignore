@@ -1,0 +1,23 @@
+
+# Rust build artifacts
+/target/
+
+# Generated large datasets
+/samples/large-access.log
+
+# Generated reports
+/report.json
+/report.csv
+/my-report.json
+
+# Temporary files
+*.tmp
+*.log.tmp
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
