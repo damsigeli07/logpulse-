@@ -24,9 +24,7 @@ pub fn parse_logs_parallel(content: &str) -> (Vec<LogEntry>, usize) {
     collect_results(results)
 }
 
-fn collect_results(
-    results: impl IntoIterator<Item = Result<LogEntry>>,
-) -> (Vec<LogEntry>, usize) {
+fn collect_results(results: impl IntoIterator<Item = Result<LogEntry>>) -> (Vec<LogEntry>, usize) {
     let mut entries = Vec::new();
     let mut invalid_lines = 0;
 

@@ -142,4 +142,3 @@ mod tests {
         assert_eq!(report.p99_latency_ms, 0);
     }
 }
-

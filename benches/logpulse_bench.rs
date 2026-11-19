@@ -19,7 +19,7 @@ fn benchmark_sequential(c: &mut Criterion) {
     let content = benchmark_content();
 
     c.bench_function("sequential_log_parsing", |b| {
-        b.iter(|| parse_logs_sequential(black_box(content)));
+        b.iter(|| parse_logs_sequential(black_box(&content)));
     });
 }
 
@@ -27,7 +27,7 @@ fn benchmark_parallel(c: &mut Criterion) {
     let content = benchmark_content();
 
     c.bench_function("parallel_log_parsing", |b| {
-        b.iter(|| parse_logs_parallel(black_box(content)));
+        b.iter(|| parse_logs_parallel(black_box(&content)));
     });
 }
 

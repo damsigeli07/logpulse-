@@ -92,7 +92,8 @@ mod tests {
 
     #[test]
     fn test_parse_log_with_surrounding_whitespace() {
-        let line = "  192.168.1.10 - - [18/Nov/2026:08:10:00] \"GET /api/users HTTP/1.1\" 200 1234 145  ";
+        let line =
+            "  192.168.1.10 - - [18/Nov/2026:08:10:00] \"GET /api/users HTTP/1.1\" 200 1234 145  ";
 
         assert_eq!(parse_line(line).unwrap().endpoint, "/api/users");
     }
@@ -108,4 +109,3 @@ mod tests {
         assert_eq!(entry.status_code, 201);
     }
 }
-
