@@ -33,6 +33,11 @@ pub fn export_csv(report: &AnalysisReport, output_path: &Path) -> Result<()> {
         },
         CsvRecord {
             category: "summary".to_string(),
+            name: "invalid_log_count".to_string(),
+            value: report.invalid_log_count.to_string(),
+        },
+        CsvRecord {
+            category: "summary".to_string(),
             name: "successful_requests".to_string(),
             value: report.successful_requests.to_string(),
         },

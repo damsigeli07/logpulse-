@@ -5,6 +5,7 @@ use std::collections::HashMap;
 #[derive(Debug, Serialize)]
 pub struct AnalysisReport {
     pub total_requests: usize,
+    pub invalid_log_count: usize,
     pub successful_requests: usize,
     pub client_errors: usize,
     pub server_errors: usize,
@@ -71,6 +72,7 @@ pub fn analyze_logs(entries: &[LogEntry]) -> AnalysisReport {
 
     AnalysisReport {
         total_requests,
+        invalid_log_count: 0,
         successful_requests,
         client_errors,
         server_errors,

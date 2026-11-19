@@ -84,7 +84,8 @@ fn analyze_file(
     println!("Processing time: {:.2?}", processing_time);
     println!("Invalid lines: {}", invalid_lines);
 
-    let report = analyze_logs(&entries);
+    let mut report = analyze_logs(&entries);
+    report.invalid_log_count = invalid_lines;
 
     match format {
         OutputFormat::Table => {
