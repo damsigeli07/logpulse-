@@ -65,6 +65,10 @@ fn analyze_file(
     output: Option<PathBuf>,
     parallel: bool,
 ) -> Result<()> {
+    if !input.is_file() {
+        anyhow::bail!("Input path is not a file: {}", input.display());
+    }
+
     println!("Reading log file: {}", input.display());
 
     let content = fs::read_to_string(&input)?;
