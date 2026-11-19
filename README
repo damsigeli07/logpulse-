@@ -1,0 +1,34 @@
+# LogPulse
+
+Short project description
+
+## Features
+
+## Architecture
+
+## Technology Stack
+
+## Installation
+
+## Usage
+
+## Performance Benchmarks
+
+Criterion benchmarks compare sequential and parallel parsing on the same
+100,000-line workload. The input is generated in memory from the tracked sample,
+so no generated dataset is required to run the benchmarks:
+
+```powershell
+cargo bench --bench logpulse_bench
+```
+
+Criterion stores local measurements under `target/criterion/`. Results depend
+on the machine and should be compared on the same hardware.
+
+## Testing
+
+## Project Structure
+
+## Future Improvements
+
+## License
