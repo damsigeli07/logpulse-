@@ -2,6 +2,7 @@
 use logpulse::analyzer::analyze_logs;
 use logpulse::models::LogEntry;
 use logpulse::parser::parse_line;
+use logpulse::pipeline::{parse_logs_parallel, parse_logs_sequential};
 
 #[test]
 fn test_parser_and_analyzer_work_together() {
@@ -42,4 +43,14 @@ fn test_analyzer_handles_empty_input() {
     assert_eq!(report.total_requests, 0);
     assert_eq!(report.successful_requests, 0);
     assert_eq!(report.error_rate_percent, 0.0);
+}
+
+#[test]
+fn test_sequential_and_parallel_processing_match() {
+    let logs = format!("{}malformed log line\n\n", include_str!("../samples/access.log"));
+
+    assert_eq!(
+        parse_logs_sequential(&logs),
+        parse_logs_parallel(&logs)
+    );
 }
