@@ -1,16 +1,67 @@
 # LogPulse
 
-Short project description
+LogPulse is a Rust command-line tool that parses server access logs and reports
+request, error, endpoint, and latency statistics.
 
 ## Features
 
+- Parse access-log lines and count invalid entries.
+- Report request totals, HTTP error classes, error rate, latency averages and
+  percentiles, and the most-requested endpoints.
+- Process input sequentially or in parallel.
+- Export reports as a terminal table, JSON, or CSV.
+
 ## Architecture
+
+- `parser`: converts one access-log line into a typed `LogEntry`.
+- `pipeline`: processes non-empty lines sequentially or with Rayon and counts
+  invalid lines.
+- `analyzer`: derives request and latency statistics from valid entries.
+- `exporter`: serializes analysis reports to JSON or CSV.
+- `main`: validates CLI input, selects the processing mode, and presents the
+  report.
 
 ## Technology Stack
 
+- Rust 2024 edition
+- Clap for command-line parsing
+- Rayon for parallel processing
+- Serde, `serde_json`, and `csv` for report serialization
+- Criterion for benchmarks
+
 ## Installation
 
+Install a stable Rust toolchain, then build the executable:
+
+```powershell
+cargo build --release
+```
+
+The binary is written to `target/release/logpulse.exe` on Windows.
+
 ## Usage
+
+Analyze the included sample and print a table:
+
+```powershell
+cargo run -- analyze samples/access.log
+```
+
+Choose JSON or CSV output, optionally specifying a destination:
+
+```powershell
+cargo run -- analyze samples/access.log --format json --output report.json
+cargo run -- analyze samples/access.log --format csv --output report.csv
+```
+
+Use the parallel processing pipeline with `--parallel`:
+
+```powershell
+cargo run -- analyze samples/access.log --parallel
+```
+
+The `--format` option accepts `table`, `json`, or `csv`. JSON and CSV default
+to `report.json` and `report.csv` when `--output` is omitted.
 
 ## Performance Benchmarks
 
@@ -27,8 +78,32 @@ on the machine and should be compared on the same hardware.
 
 ## Testing
 
+Run formatting checks and all tests, including the benchmark smoke tests:
+
+```powershell
+cargo fmt --all -- --check
+cargo test --all-targets
+```
+
 ## Project Structure
+
+```text
+.
+├── benches/             # Criterion benchmarks
+├── samples/             # Small tracked sample log
+├── scripts/             # Reproducible large-log generator
+├── src/                 # CLI and processing modules
+├── tests/               # Integration tests
+└── .github/workflows/   # CI checks
+```
 
 ## Future Improvements
 
+- Support additional access-log formats.
+- Add configurable filtering and time-window summaries.
+- Publish representative benchmark results for documented hardware.
+
 ## License
+
+No license is currently specified. Add a license before redistributing this
+project.
