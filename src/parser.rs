@@ -18,7 +18,7 @@ pub fn parse_line(line: &str) -> Result<LogEntry> {
 
     // Match the raw log line.
     let captures = regex
-        .captures(line)
+        .captures(line.trim())
         .ok_or_else(|| anyhow!("Invalid log format: {}", line))?;
 
     // Extract text fields.
@@ -88,6 +88,13 @@ mod tests {
         let line = "This is not a valid server log";
 
         assert!(parse_line(line).is_err());
+    }
+
+    #[test]
+    fn test_parse_log_with_surrounding_whitespace() {
+        let line = "  192.168.1.10 - - [18/Nov/2026:08:10:00] \"GET /api/users HTTP/1.1\" 200 1234 145  ";
+
+        assert_eq!(parse_line(line).unwrap().endpoint, "/api/users");
     }
 
     #[test]
